@@ -1,1 +1,1 @@
-#Work at École Des Mines De Saint Etienne
+Work at École Des Mines De Saint Etienne
