@@ -36,10 +36,10 @@ void print_tab(float tab[LEN]){
 
 int init_wind(){
   srand(time(NULL));
-  int wind = rand()%3;
+  int wind = rand() % 3;
   return wind;
 }
 
 void next_day(float tab[LEN], int state){
-  
+
 }
