@@ -19,10 +19,11 @@ int main(){
       fscanf(data, "%f", &prod[i]);
     fscanf(data, "%d", &rangemax);
     print_tab(prob);
-    printf("%d\n", rangemax);
+    printf("rangemax %d\n", rangemax);
     int wind = init_wind();
-    printf("%d\n", wind);
-    next_wind(prob, wind);
+    printf("wind %d\n", wind);
+    wind = next_wind(prob, wind);
+    printf("next_wind %d\n", wind);
   return 0;
   }
   return 0;
@@ -44,9 +45,9 @@ int init_wind(){
 int next_wind(float prob[LEN], int wind){
   float random = (float)rand()/(float)(RAND_MAX);
   printf("random %f\n", random);
-  if (random <= prob(3 * wind))
+  if (random <= prob[3 * wind])
     return 0;
-  if (random <= prob(3 * wind) + prob(3 * wind + 1))
+  if (random <= prob[3 * wind] + prob[3 * wind + 1])
     return 1;
   return 2;
 }
