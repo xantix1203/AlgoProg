@@ -5,6 +5,11 @@
 void print_tab(float tab[LEN]);
 int init_wind(void);
 int next_wind(float prob[LEN], int wind);
+float production_eolienne(int wind,float prod[3]);
+void simulation(int rangemax,float prod[3],float prob[LEN]);
+float moyenne(int rangemax,float prod[3],float prob[LEN], int wind);
+void simulation2(int rangemax,float prod[3],float prob[LEN]);
+
 
 int main(){
   float prob[9];
@@ -24,6 +29,8 @@ int main(){
     printf("wind %d\n", wind);
     wind = next_wind(prob, wind);
     printf("next_wind %d\n", wind);
+	simulation(rangemax,prod,prob);
+	simulation2(rangemax,prod,prob);
   return 0;
   }
   return 0;
@@ -50,4 +57,48 @@ int next_wind(float prob[LEN], int wind){
   if (random <= prob[3 * wind] + prob[3 * wind + 1])
     return 1;
   return 2;
+}
+
+float production_eolienne(int wind,float prod[3])
+{
+	return 20*prod[wind];
+}
+
+void simulation(int rangemax,float prod[3],float prob[LEN])
+{
+	FILE* resultat;
+	int wind = init_wind();
+	int i;
+	for(i = 0; i < rangemax; i++)
+	{
+		resultat = fopen("res","a");
+		fprintf(resultat, "jour %d  production:%fMW\n",i + 1,production_eolienne(wind, prod));
+		fclose(resultat);
+		wind = next_wind(prob, wind);
+	};
+}
+
+float moyenne(int rangemax, float prod[3], float prob[LEN], int wind){
+	int i;
+	float moy = 0;
+	for(i = 0; i < rangemax; i++)
+	{
+		moy = moy + production_eolienne(wind, prod);
+		wind = next_wind(prob, wind);
+	}
+	moy = moy / rangemax;
+	return moy;
+}
+
+void simulation2(int rangemax,float prod[3],float prob[LEN]){
+	FILE* resultat;
+	int i;
+  int wind = init_wind();
+	for(i = 0; i < rangemax; i++)
+	{
+		resultat = fopen("simu2","a");
+		fprintf(resultat, "simulation %d  production moyenne:%fMW\n", i + 1, moyenne(rangemax, prod, prob, wind));
+    wind = next_wind(prob, wind);
+		fclose(resultat);
+	};
 }
