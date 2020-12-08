@@ -41,5 +41,5 @@ int init_wind(){
 }
 
 void next_day(float tab[LEN], int state){
-
+  
 }
