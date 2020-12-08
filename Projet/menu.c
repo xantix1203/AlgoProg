@@ -46,7 +46,7 @@ int main()
 		char titre[50];
 		printf("\ntemps de simulation (en jours): ");
 		scanf("%d", &duree);
-		printf("\nnombre d'itérations pour la simulation ?: ");
+		printf("\nnombre d'itérations pour la simulation: ");
 		scanf("%d", &nombres);
 		printf("\nnom du fichier de resultat: ");
 		scanf("%s", titre);
