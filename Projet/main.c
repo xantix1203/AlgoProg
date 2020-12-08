@@ -29,8 +29,8 @@ int main(){
     printf("wind %d\n", wind);
     wind = next_wind(prob, wind);
     printf("next_wind %d\n", wind);
-	simulation(rangemax,prod,prob);
-	simulation2(rangemax,prod,prob);
+	simulation(rangemax, prod, prob);
+	simulation2(rangemax, prod, prob);
   return 0;
   }
   return 0;
@@ -71,8 +71,8 @@ void simulation(int rangemax,float prod[3],float prob[LEN])
 	int i;
 	for(i = 0; i < rangemax; i++)
 	{
-		resultat = fopen("res","a");
-		fprintf(resultat, "jour %d  production:%fMW\n",i + 1,production_eolienne(wind, prod));
+		resultat = fopen("res", "a");
+		fprintf(resultat, "jour %d  production:%fMW\n", i + 1, production_eolienne(wind, prod));
 		fclose(resultat);
 		wind = next_wind(prob, wind);
 	};
