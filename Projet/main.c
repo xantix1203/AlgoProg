@@ -4,7 +4,7 @@
 #define LEN 9
 void print_tab(float tab[LEN]);
 int init_wind(void);
-void next_day(float tab[LEN], int state);
+int next_wind(float prob[LEN], int wind);
 
 int main(){
   float prob[9];
@@ -22,6 +22,7 @@ int main(){
     printf("%d\n", rangemax);
     int wind = init_wind();
     printf("%d\n", wind);
+    next_wind(prob, wind);
   return 0;
   }
   return 0;
@@ -40,6 +41,12 @@ int init_wind(){
   return wind;
 }
 
-void next_day(float tab[LEN], int state){
-  
+int next_wind(float prob[LEN], int wind){
+  float random = (float)rand()/(float)(RAND_MAX);
+  printf("random %f\n", random);
+  if (random <= prob(3 * wind))
+    return 0;
+  if (random <= prob(3 * wind) + prob(3 * wind + 1))
+    return 1;
+  return 2;
 }
