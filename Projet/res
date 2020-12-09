@@ -202,3 +202,206 @@ simulation 98 ->  7.290000MW pour 100 jours
 simulation 99 ->  8.180000MW pour 100 jours
 la production minimale obtenue pour 100 jours est 7.110000MW (simulation 22) 
 la production maximale obtenue pour 100 jours est 8.800000MW (simulation 15) 
+simulation 0 ->  7.770000MW pour 100 jours
+simulation 1 ->  8.020000MW pour 100 jours
+simulation 2 ->  8.580000MW pour 100 jours
+simulation 3 ->  8.030000MW pour 100 jours
+simulation 4 ->  7.760000MW pour 100 jours
+simulation 5 ->  8.080000MW pour 100 jours
+simulation 6 ->  8.330000MW pour 100 jours
+simulation 7 ->  8.110000MW pour 100 jours
+simulation 8 ->  8.070000MW pour 100 jours
+simulation 9 ->  7.570000MW pour 100 jours
+simulation 10 ->  8.730000MW pour 100 jours
+simulation 11 ->  7.720000MW pour 100 jours
+simulation 12 ->  8.450000MW pour 100 jours
+simulation 13 ->  8.030000MW pour 100 jours
+simulation 14 ->  8.460000MW pour 100 jours
+simulation 15 ->  7.290000MW pour 100 jours
+simulation 16 ->  8.280000MW pour 100 jours
+simulation 17 ->  8.700000MW pour 100 jours
+simulation 18 ->  7.540000MW pour 100 jours
+simulation 19 ->  8.980000MW pour 100 jours
+simulation 20 ->  8.520000MW pour 100 jours
+simulation 21 ->  7.330000MW pour 100 jours
+simulation 22 ->  8.510000MW pour 100 jours
+simulation 23 ->  7.910000MW pour 100 jours
+simulation 24 ->  8.240000MW pour 100 jours
+simulation 25 ->  6.790000MW pour 100 jours
+simulation 26 ->  6.960000MW pour 100 jours
+simulation 27 ->  7.360000MW pour 100 jours
+simulation 28 ->  7.660000MW pour 100 jours
+simulation 29 ->  7.850000MW pour 100 jours
+simulation 30 ->  7.880000MW pour 100 jours
+simulation 31 ->  8.320000MW pour 100 jours
+simulation 32 ->  8.210000MW pour 100 jours
+simulation 33 ->  7.630000MW pour 100 jours
+simulation 34 ->  7.950000MW pour 100 jours
+simulation 35 ->  7.860000MW pour 100 jours
+simulation 36 ->  7.240000MW pour 100 jours
+simulation 37 ->  7.280000MW pour 100 jours
+simulation 38 ->  8.210000MW pour 100 jours
+simulation 39 ->  8.680000MW pour 100 jours
+simulation 40 ->  8.960000MW pour 100 jours
+simulation 41 ->  7.720000MW pour 100 jours
+simulation 42 ->  7.820000MW pour 100 jours
+simulation 43 ->  7.610000MW pour 100 jours
+simulation 44 ->  7.730000MW pour 100 jours
+simulation 45 ->  8.490000MW pour 100 jours
+simulation 46 ->  7.860000MW pour 100 jours
+simulation 47 ->  8.090000MW pour 100 jours
+simulation 48 ->  9.420000MW pour 100 jours
+simulation 49 ->  8.200000MW pour 100 jours
+simulation 50 ->  7.820000MW pour 100 jours
+simulation 51 ->  8.390000MW pour 100 jours
+simulation 52 ->  7.470000MW pour 100 jours
+simulation 53 ->  7.810000MW pour 100 jours
+simulation 54 ->  7.910000MW pour 100 jours
+simulation 55 ->  8.100000MW pour 100 jours
+simulation 56 ->  7.840000MW pour 100 jours
+simulation 57 ->  8.540000MW pour 100 jours
+simulation 58 ->  8.180000MW pour 100 jours
+simulation 59 ->  8.230000MW pour 100 jours
+simulation 60 ->  8.400000MW pour 100 jours
+simulation 61 ->  7.660000MW pour 100 jours
+simulation 62 ->  7.030000MW pour 100 jours
+simulation 63 ->  7.980000MW pour 100 jours
+simulation 64 ->  8.380000MW pour 100 jours
+simulation 65 ->  7.710000MW pour 100 jours
+simulation 66 ->  8.130000MW pour 100 jours
+simulation 67 ->  8.500000MW pour 100 jours
+simulation 68 ->  7.780000MW pour 100 jours
+simulation 69 ->  7.820000MW pour 100 jours
+simulation 70 ->  7.920000MW pour 100 jours
+simulation 71 ->  7.450000MW pour 100 jours
+simulation 72 ->  7.610000MW pour 100 jours
+simulation 73 ->  8.420000MW pour 100 jours
+simulation 74 ->  8.160000MW pour 100 jours
+simulation 75 ->  7.520000MW pour 100 jours
+simulation 76 ->  7.790000MW pour 100 jours
+simulation 77 ->  7.730000MW pour 100 jours
+simulation 78 ->  8.590000MW pour 100 jours
+simulation 79 ->  8.100000MW pour 100 jours
+simulation 80 ->  8.020000MW pour 100 jours
+simulation 81 ->  8.460000MW pour 100 jours
+simulation 82 ->  8.050000MW pour 100 jours
+simulation 83 ->  8.020000MW pour 100 jours
+simulation 84 ->  8.210000MW pour 100 jours
+simulation 85 ->  8.280000MW pour 100 jours
+simulation 86 ->  8.140000MW pour 100 jours
+simulation 87 ->  8.020000MW pour 100 jours
+simulation 88 ->  8.730000MW pour 100 jours
+simulation 89 ->  7.720000MW pour 100 jours
+simulation 90 ->  7.660000MW pour 100 jours
+simulation 91 ->  8.380000MW pour 100 jours
+simulation 92 ->  8.970000MW pour 100 jours
+simulation 93 ->  8.350000MW pour 100 jours
+simulation 94 ->  7.740000MW pour 100 jours
+simulation 95 ->  7.540000MW pour 100 jours
+simulation 96 ->  8.190000MW pour 100 jours
+simulation 97 ->  7.440000MW pour 100 jours
+simulation 98 ->  8.160000MW pour 100 jours
+simulation 99 ->  8.420000MW pour 100 jours
+la production minimale obtenue pour 100 jours est 6.790000MW (simulation 26) 
+la production maximale obtenue pour 100 jours est 9.420000MW (simulation 49) 
+le jour 1 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 2 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 3 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 4 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 5 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 6 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 7 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 8 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 9 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 10 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 11 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 12 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 13 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 14 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 15 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 16 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 17 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 18 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 19 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 20 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 21 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 22 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 23 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 24 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 25 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 26 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 27 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 28 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 29 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 30 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 31 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 32 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 33 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 34 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 35 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 36 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 37 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 38 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 39 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 40 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 41 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 42 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 43 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 44 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 45 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 46 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 47 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 48 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 49 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 50 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 51 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 52 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 53 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 54 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 55 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 56 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 57 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 58 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 59 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 60 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 61 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 62 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 63 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 64 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 65 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 66 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 67 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 68 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 69 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 70 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 71 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 72 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 73 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 74 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 75 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 76 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 77 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 78 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 79 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 80 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 81 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 82 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 83 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 84 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 85 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 86 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 87 l'etat du vent est 0 et la production est de 0.000000 MW
+le jour 88 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 89 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 90 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 91 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 92 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 93 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 94 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 95 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 96 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 97 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 98 l'etat du vent est 1 et la production est de 8.000000 MW
+le jour 99 l'etat du vent est 2 et la production est de 13.000000 MW
+le jour 100 l'etat du vent est 1 et la production est de 8.000000 MW
+la production moyenne est 7.500000 
