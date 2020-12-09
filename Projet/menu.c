@@ -113,7 +113,7 @@ void simulation(int duree, int nombres, char titre[50], float prod[3], float pro
 	FILE* simul;
 	for (i = 0; i < nombres; i++){
 		moy = moyenne(duree, prod, prob, a);
-		a = next_wind(prob,a);
+		a = next_wind(prob, a);
 		printf("simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
 		simul = fopen(titre, "a");
 		fprintf(simul, "simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
@@ -166,7 +166,7 @@ void changementproduc(float prob[LEN])
 	change = fopen("data.txt", "w");
 	for (int j = 0;j < (LEN - 1); j++)
 	{
-		fprintf(change,"%f ", prob[j]);
+		fprintf(change, "%f ", prob[j]);
 	}
 	fprintf(change, "%f\n", prob[LEN - 1]);
 	fclose(change);
@@ -179,7 +179,7 @@ void changementproduc(float prob[LEN])
 	change = fopen("data.txt","a");
 	for( int k = 0; k < 3; k++)
 	{
-		fprintf(change,"%f ", tab[k]);
+		fprintf(change, "%f ", tab[k]);
 	};
 	fclose(change);
 }
