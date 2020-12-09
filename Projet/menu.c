@@ -103,15 +103,13 @@ float moyenne(int nombres, float prod[3], float prob[LEN], int wind)
 void simulation(int duree, int nombres, char titre[50], float prod[3], float prob[LEN])
 {
 	int a = init_wind();
-	int i;
-	int j;
 	int mini = 0;
 	int maxi = 0;
 	float minimum = 50;
 	float maximum = 0;
 	float moy;
 	FILE* simul;
-	for (i = 0; i < nombres; i++){
+	for (int i = 0; i < nombres; i++){
 		moy = moyenne(duree, prod, prob, a);
 		a = next_wind(prob, a);
 		printf("simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
@@ -177,7 +175,7 @@ void changementproduc(float prob[LEN])
 		scanf("%f", &tab[i]);
 	}
 	change = fopen("data.txt","a");
-	for( int k = 0; k < 3; k++)
+	for (int k = 0; k < 3; k++)
 	{
 		fprintf(change, "%f ", tab[k]);
 	};
