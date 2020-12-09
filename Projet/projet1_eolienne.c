@@ -41,7 +41,7 @@ int main(){
 		int wind = init_wind();
 		printf("\nnombre d'itérations: ");
 		scanf("%d", &nb_days);
-		printf("moyenne %f", moyenne(nb_days, prod, prob));
+		printf("moyenne %f\n", moyenne(nb_days, prod, prob));
 	}
 	if (choix == 2){
 		int nb_days;
