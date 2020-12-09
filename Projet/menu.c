@@ -2,18 +2,16 @@
 #include <stdlib.h>
 #include <time.h>
 #define LEN 9
-int init_wind();
+int init_wind(void);
 int next_wind(float prob[LEN], int wind);
 float production_eolienne(int wind, float prod[3]);
 float moyenne(int nombres, float prod[3], float prob[LEN], int wind);
 void simulation(int duree, int nombres, char titre[50], float prod[3], float prob[LEN]);
+void changementproba(float prod[3]);
+void changementproduc(float prob[LEN]);
 
 
-
-
-int main()
-{
-
+int main(){
 	//attribution des tableau de propabilite et de production
 	float prob[9];
 	float prod[3];
@@ -31,16 +29,14 @@ int main()
 	int choix;
 	printf("que voulez faire?\n(1) voir la production moyenne des 20 eoliennes\n(2) faire une simulation\n(3) modifier la matrice de transition du vent\n(4) changer les valeurs de production\nchoix: ");
 	scanf("%d", &choix);
-	if (choix == 1)
-	{
+	if (choix == 1){
 		int nombres;
 		int wind = init_wind();
 		printf("\nnombre d'itérations: ");
 		scanf("%d", &nombres);
 		printf("moyenne %f", moyenne(nombres, prod, prob, wind));
 	}
-	if (choix == 2)
-	{
+	if (choix == 2){
 		int duree;
 		int nombres;
 		char titre[50];
@@ -53,13 +49,11 @@ int main()
 		printf("\n");
 		simulation(duree, nombres, titre, prod, prob);
 	}
-	if (choix == 3)
-	{
-		//changementpropa();
+	if (choix == 3){
+		changementproba(prod);
 	}
-	if (choix == 4)
-	{
-		//changementproduc();
+	if (choix == 4){
+		changementproduc(prob);
 	}
 	return 0;
 }
@@ -106,7 +100,6 @@ float moyenne(int nombres, float prod[3], float prob[LEN], int wind)
 }
 
 //on fait la simulation pour le on commence par faire la simulation puis on la mettra sur le fichier
-//malheureusement afin de compenser le probleme du pseudo aleatoire de rand on utilise pas next_wind
 void simulation(int duree, int nombres, char titre[50], float prod[3], float prob[LEN])
 {
 	int a = init_wind();
@@ -118,31 +111,75 @@ void simulation(int duree, int nombres, char titre[50], float prod[3], float pro
 	float maximum = 0;
 	float moy;
 	FILE* simul;
-	for (i = 0; i < nombres; i++)
-	{
+	for (i = 0; i < nombres; i++){
 		moy = moyenne(duree, prod, prob, a);
 		a = next_wind(prob,a);
 		printf("simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
 		simul = fopen(titre, "a");
 		fprintf(simul, "simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
 		fclose(simul);
-		if (moy < minimum)
-		{
+		if (moy < minimum){
 			minimum = moy;
 			mini = i;
 		}
-		if (moy > maximum)
-		{
+		if (moy > maximum){
 			maximum = moy;
 			maxi = i;
 		};
-	}
-	printf("la production minimale obtenue pour %d jours est %fMW (simulation %d) \n",duree, minimum, mini);
+	};
+	printf("la production minimale obtenue pour %d jours est %fMW (simulation %d) \n", duree, minimum, mini);
 	simul = fopen(titre, "a");
-	fprintf(simul, "la production minimale obtenue pour %d jours est %fMW (simulation %d) \n",duree, minimum, mini);
+	fprintf(simul, "la production minimale obtenue pour %d jours est %fMW (simulation %d) \n", duree, minimum, mini);
 	fclose(simul);
-	printf("la production maximale obtenue pour %d jours est %fMW (simulation %d) \n",duree, maximum, maxi);
-	simul=fopen(titre, "a");
-	fprintf(simul, "la production maximale obtenue pour %d jours est %fMW (simulation %d) \n",duree, maximum, maxi);
+	printf("la production maximale obtenue pour %d jours est %fMW (simulation %d) \n", duree, maximum, maxi);
+	simul = fopen(titre, "a");
+	fprintf(simul, "la production maximale obtenue pour %d jours est %fMW (simulation %d) \n", duree, maximum, maxi);
 	fclose(simul);
+}
+
+
+//on cree une fonction pour changer les probabilite si on change de localisation
+
+void changementproba(float prod[3])
+{
+	float tab[LEN];
+	for (int i = 0; i < LEN; i++){
+		printf("entrer la probabilite %d: ", (i + 1));
+		scanf("%f", &tab[i]);
+	}
+	FILE* change;
+	change = fopen("data.txt", "w");
+	for (int j = 0; j < (LEN - 1); j++)
+		fprintf(change, "%f ", tab[j]);
+	fprintf(change, "%f\n", tab[LEN - 1]);
+	fclose(change);
+	change = fopen("data.txt", "a");
+	for (int k = 0; k < 3; k++)
+		fprintf(change, "%f ", prod[k]);
+	fclose(change);
+}
+
+
+void changementproduc(float prob[LEN])
+{
+	FILE* change;
+	change = fopen("data.txt", "w");
+	for (int j = 0;j < (LEN - 1); j++)
+	{
+		fprintf(change,"%f ", prob[j]);
+	}
+	fprintf(change, "%f\n", prob[LEN - 1]);
+	fclose(change);
+	float tab[3];
+	for (int i = 0;i < 3; i++)
+	{
+		printf("donnez la production pour un vent de catégorie %d  ", i);
+		scanf("%f", &tab[i]);
+	}
+	change = fopen("data.txt","a");
+	for( int k = 0; k < 3; k++)
+	{
+		fprintf(change,"%f ", tab[k]);
+	};
+	fclose(change);
 }

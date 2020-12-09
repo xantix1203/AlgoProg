@@ -1,25 +1,19 @@
-//
-//  main.c
-//  AlgoProg
-//
-//  Created by Arnaud Cotten on 25/11/2020.
-//
-
-//on fais une fonction pour initialiser un vent aleatoire
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #define LEN 9
-int init_wind(void);
+int init_wind();
 int next_wind(float prob[LEN], int wind);
-float moyenne(int nombres,float prod[3],float prob[LEN],int wind);
-float production_eolienne(int wind,float prod[3]);
-void simulation(int duree,int nombres,char titre[3],float prod[3],float prob[LEN]);
+float production_eolienne(int wind, float prod[3]);
+float moyenne(int nombres, float prod[3], float prob[LEN], int wind);
+void simulation(int duree, int nombres, char titre[50], float prod[3], float prob[LEN]);
+void changementproba(float prod[3]);
+void changementproduc(float prob[LEN]);
+
 
 int main()
 {
-    
+
     //attribution des tableau de propabilite et de production
     float prob[9];
     float prod[3];
@@ -33,12 +27,47 @@ int main()
         for (int i = 0; i < 3; i++)
             fscanf(data, "%f", &prod[i]);
     }
-    char titre[3] = "sim";
-    simulation(10, 5, titre, prod, prob);
+    //menu
+    int choix;
+    printf("que voulez faire?\n(1) voir la production moyenne des 20 eoliennes\n(2) faire une simulation\n(3) modifier la matrice de transition du vent\n(4) changer les valeurs de production\nchoix: ");
+    scanf("%d", &choix);
+    if (choix == 1)
+    {
+        int nombres;
+        int wind = init_wind();
+        printf("\nnombre d'itérations: ");
+        scanf("%d", &nombres);
+        printf("moyenne %f", moyenne(nombres, prod, prob, wind));
+    }
+    if (choix == 2)
+    {
+        int duree;
+        int nombres;
+        char titre[50];
+        printf("\ntemps de simulation (en jours): ");
+        scanf("%d", &duree);
+        printf("\nnombre d'itérations pour la simulation: ");
+        scanf("%d", &nombres);
+        printf("\nnom du fichier de resultat: ");
+        scanf("%s", titre);
+        printf("\n");
+        simulation(duree, nombres, titre, prod, prob);
+    }
+    if (choix == 3)
+    {
+        changementproba(prod);
+    }
+    if (choix == 4)
+    {
+        changementproduc(prob);
+    }
+    return 0;
 }
+
+//on fais une fonction pour initialiser un vent aleatoire
 int init_wind()
 {
-    srand(time(NULL));
+    srand( time(NULL));
     int wind = rand() % 3;
     return wind;
 }
@@ -54,60 +83,118 @@ int next_wind(float prob[LEN], int wind)
     return 2;
 }
 
-float production_eolienne(int wind,float prod[3])
+
+//on fait une fonction qui calcule la production en fonction du vent
+float production_eolienne(int wind, float prod[3])
 {
-    return 20*prod[wind];
+    return 20 * prod[wind];
 }
-float moyenne(int nombres,float prod[3],float prob[LEN],int wind)
+
+//on fait la fonction qui calcule la moyenne du (1)
+float moyenne(int nombres, float prod[3], float prob[LEN], int wind)
 {
-    int a=next_wind(prob,wind);
-    float moy=0;
+    int a = next_wind(prob, wind);
+    float moy = 0;
     int j;
-    for(j=0;j<nombres;j++)
+    for(j = 0; j < nombres; j++)
     {
-            moy=moy+production_eolienne(a,prod);
-            a=next_wind(prob,a);
+            moy = moy + production_eolienne(a, prod);
+            a = next_wind(prob, a);
     }
-    moy=moy/nombres;
+    moy = moy / nombres;
     return moy;
 }
 
-void simulation(int duree,int nombres,char titre[3],float prod[3],float prob[LEN])
+//on fait la simulation pour le on commence par faire la simulation puis on la mettra sur le fichier
+void simulation(int duree, int nombres, char titre[50], float prod[3], float prob[LEN])
 {
-    int a=init_wind();
+    int a = init_wind();
     int i;
     int j;
-    int mini=0;
-    int maxi=0;
-    float minimum=50;
-    float maximum=0;
+    int mini = 0;
+    int maxi = 0;
+    float minimum = 50;
+    float maximum = 0;
     float moy;
     FILE* simul;
-    for (i=0;i<nombres;i++)
+    for (i = 0; i < nombres; i++)
     {
-        moy=moyenne(duree,prod,prob,a);
-        a=next_wind(prob,a);
-        printf("le %d cas produit%f MW\n",i,moy);
-        simul=fopen(titre,"a");
-        fprintf(simul,"le %d cas produit%f MW\n",i,moy);
+        moy = moyenne(duree, prod, prob, a);
+        a = next_wind(prob,a);
+        printf("simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
+        simul = fopen(titre, "a");
+        fprintf(simul, "simulation %d ->  %fMW pour %d jours\n", i, moy, duree);
         fclose(simul);
-        if (moy<minimum)
+        if (moy < minimum)
         {
-            minimum=moy;
-            mini=i;
+            minimum = moy;
+            mini = i;
         }
-        if (moy>maximum)
+        if (moy > maximum)
         {
-            maximum=moy;
-            maxi=i;
+            maximum = moy;
+            maxi = i;
         };
     }
-    printf("le cas ou la production est minimal est le %d avec une production de %f MW\n",mini,minimum);
-    simul=fopen(titre,"a");
-    fprintf(simul,"le cas ou la production est minimal est le %d avec une production de %f MW\n",mini,minimum);
+    printf("la production minimale obtenue pour %d jours est %fMW (simulation %d) \n",duree, minimum, mini);
+    simul = fopen(titre, "a");
+    fprintf(simul, "la production minimale obtenue pour %d jours est %fMW (simulation %d) \n",duree, minimum, mini);
     fclose(simul);
-    printf("le casou la production est maximal est le %d avec une production de%f MW\n",maxi,maximum);
-    simul=fopen(titre,"a");
-    fprintf(simul,"le casou la production est maximal est le %d avec une production de%f MW\n",maxi,maximum);
+    printf("la production maximale obtenue pour %d jours est %fMW (simulation %d) \n",duree, maximum, maxi);
+    simul=fopen(titre, "a");
+    fprintf(simul, "la production maximale obtenue pour %d jours est %fMW (simulation %d) \n",duree, maximum, maxi);
     fclose(simul);
 }
+
+
+//on cree une fonction pour changer les probabilite si on change de localisation
+
+void changementproba(float prod[3])
+{
+    float tab[LEN];
+    for(int i=0;i<LEN;i++)
+    {
+        printf("donnez la %d probabilite  ",i);
+        scanf("%f",&tab[i]);
+    }
+    FILE* change;
+    change=fopen("data.txt","w");
+    for(int j=0;j<(LEN-1);j++)
+    {
+        fprintf(change,"%f ",tab[j]);
+    }
+    fprintf(change,"%f\n",tab[LEN-1]);
+    fclose(change);
+    change=fopen("data.txt","a");
+    for(int k=0;k<3;k++)
+    {
+        fprintf(change,"%f ",prod[k]);
+    };
+    fclose(change);
+}
+
+
+void changementproduc(float prob[LEN])
+{
+    FILE* change;
+    change=fopen("data.txt","w");
+    for(int j=0;j<(LEN-1);j++)
+    {
+        fprintf(change,"%f ",prob[j]);
+    }
+    fprintf(change,"%f\n",prob[LEN-1]);
+    fclose(change);
+    float tab[3];
+    for(int i;i<3;i++)
+    {
+        printf("donnez la production pour un vent de catégorie %d  ",i);
+        scanf("%f",&tab[i]);
+    }
+    change=fopen("data.txt","a");
+    for(int k;k<3;k++)
+    {
+        fprintf(change,"%f ",tab[k]);
+    };
+    fclose(change);
+}
+
