@@ -26,7 +26,6 @@ void afficherComposante(Composante *composante);
 void resetVecteur(Vecteur *vect);
 
 
-
 int main(){
   Vecteur *vect;
   vect = (Vecteur *)malloc(sizeof(Vecteur));

@@ -1,0 +1,7 @@
+Toulouse 475
+Paris 2190
+Bordeaux 252
+Marseille 862
+Gardanne 20
+Lyon 515
+Aix 143
