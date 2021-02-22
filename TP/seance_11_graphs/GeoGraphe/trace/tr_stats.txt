@@ -1,0 +1,24 @@
+nb nodes : 72222
+
+Toutes les lignes
+nb lignes : 11597
+nb max points : 29, ligne 8439
+nb total points : 3795
+nb echecs point : 0
+
+Lignes retenues
+nb_lignes = 754, total_points = 3795, nb_max_points = 29 (ligne 8439)
+(nb highways : 3465)
+
+nb points differents : 2833
+nb points lignes completes (dont points multiples) : 3795
+nb points lignes reduites (dont points multiples) : 1661
+nb noeuds : 699
+nb points deja noeud : 962
+nb boucles : 0, nb arcs déjà presents : 0
+nb arcs : 1153
+nb noeuds = nb points lignes reduites - nb points deja noeud ? OUI => OK
+
+Graphe connexe
+nb noeuds : 586
+nb arcs : 1010

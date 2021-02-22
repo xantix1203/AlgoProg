@@ -1,0 +1,12 @@
+/*---------------------------------------------------------
+A graph is defined by n nodes and m arcs.
+
+- Nodes are identified by integers from 1 to n.
+- Graphs can be considered as directed or undirected, 
+	depending on the problem under study.
+-----------------------------------------------------------*/
+
+n	% number of nodes
+m 	% number of arcs (edges)
+i j 	% arc (edge) from node i to node j
+...
