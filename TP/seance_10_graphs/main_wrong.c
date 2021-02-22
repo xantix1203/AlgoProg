@@ -15,18 +15,20 @@ int main()
 {
 	const char*	file_name = "graph_10_13.txt";
 	int		nb_nodes, nb_edges;
+	nb_nodes = 10;
+	nb_edges = 15;
 	int** 		adjacency_matrix = read_graph_from_file(file_name, nb_nodes, nb_edges);
 
 	printf("Adjacency matrix: \n" );
 	print_adjacency_matrix(adjacency_matrix, nb_nodes);
-
 	return 0;
 }
 
 int** read_graph_from_file(const char* file_name, int nb_nodes, int nb_edges)
 {
+	int		nb_nodess, nb_edgess;
 	FILE *fp = fopen(file_name, "r");
-	fscanf(fp, "%d %d", &nb_nodes, &nb_edges);
+	fscanf(fp, "%d %d", &nb_nodess, &nb_edgess);
 
  	int** adjacency_matrix = (int**) malloc(nb_nodes*sizeof(int*));
 
