@@ -1,6 +1,0 @@
-fichier_carte: carte.osm
-coordonnees_geo: oui
-repertoire_resultat: graphe
-un_seul_fichier_arcs: non
-fichier_lignes: non
-trace: non
