@@ -11,6 +11,4 @@ pFile.o: pFile.c pFile.h
 	gcc -c pFile.c
 
 mon_exe: pFile.o graph.o main.o
-	gcc pFile.o graph.o main.o -o mon_exe
-
-
+	gcc pFile.o graph.o main.o -o main
