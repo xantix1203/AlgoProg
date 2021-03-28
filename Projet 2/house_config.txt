@@ -1,0 +1,2 @@
+chauffage 1
+four 2

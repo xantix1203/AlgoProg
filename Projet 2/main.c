@@ -5,6 +5,7 @@
 
 
 #define POWER_FILE "power.txt"
+#define EQUIPMENT_FILE "house_config.txt"
 #define MAX_WORD_LENGHT	28		/* Maximum word length */
 #define HASH_SIZE 7	/* Prime number */
 #define BASE 128
@@ -17,30 +18,63 @@ typedef struct _element{
   struct _element *next;
 }Element;
 
-typedef struct _hash_table {
+typedef struct _hash_table{
   unsigned int size;
   unsigned int nb_occupied_entries;
   unsigned int nb_elements;
   Element** Elements;
 } hash_table;
 
+typedef struct _equipment{
+  char word[MAX_WORD_LENGHT];
+  unsigned int number;
+  struct _equipment *next;
+}Equipment;
 
+typedef struct{
+  Equipment *head;
+}EquipmentsList;
+
+
+void menu(hash_table* hash_power, EquipmentsList* equipments_list);
 
 void initialize_hash_table(hash_table* hash_tab);
-void load_hash_table(hash_table *hash_tab);
+void load_hash_table(hash_table* hash_tab);
 void insert_element_to_hash_table(hash_table* hash_tab, Element* element);
 unsigned long get_hash_value(char *string);
-void printhash_tableCharacteristics(hash_table* hash_tab) ;
+void print_hash_table_characteristics(hash_table* hash_tab);
+
+void add_equipment(EquipmentsList* equipments_list, Equipment* equipment);
+void load_house_config(EquipmentsList* equipments_list);
+void disp_equipment(Equipment *equipment);
+void disp_equipments_list(EquipmentsList* equipments_list);
 
 
-
-int main()
-{
+int main(){
 	hash_table hash_power;
 	initialize_hash_table(&hash_power);
   load_hash_table(&hash_power);
-  printhash_tableCharacteristics(&hash_power);
+  print_hash_table_characteristics(&hash_power);
+  EquipmentsList equipments_list;
+  equipments_list.head = NULL;
+  menu(&hash_power, &equipments_list);
 	return 0;
+}
+
+
+void menu(hash_table* hash_power, EquipmentsList* equipments_list){
+  int choice;
+  printf("\n1/load house config\nchoice: ");
+  scanf("%d", &choice);
+  switch (choice){
+    case 1 :
+      load_house_config(equipments_list);
+      disp_equipments_list(equipments_list);
+      menu(hash_power, equipments_list);
+      break;
+    case 2 :
+    break;
+  }
 }
 
 
@@ -81,19 +115,21 @@ void load_hash_table(hash_table *hash_tab){
   FILE* file;
   file = fopen(POWER_FILE, "r");
   if (file!=NULL){
-    Element* element	= (Element*) malloc(sizeof(Element));
     unsigned int power;
-    while (fscanf(file, "%s %u", element->word, &power) > 0){
+    char word[MAX_WORD_LENGHT];
+    while (fscanf(file, "%s %u", word, &power) > 0){
+      Element* element	= (Element *) malloc(sizeof(Element));
+      strcpy(element->word, word);
       element->power = power;
       insert_element_to_hash_table(hash_tab, element);
     }
   }
   else
-    printf("empty file\n");
+    printf("\nNo power.txt file\n");
+  fclose(file);
 }
 
-void printhash_tableCharacteristics(hash_table* hash_tab)
-{
+void print_hash_table_characteristics(hash_table* hash_tab){
 	/* A loadFactor = 0.75 offers a good tradeoff between time and space cost. */
 
 	float loadFactor =  1.0*hash_tab->nb_occupied_entries/hash_tab->size;
@@ -102,4 +138,42 @@ void printhash_tableCharacteristics(hash_table* hash_tab)
 	printf("Load Factor: %.2f \n", loadFactor);
 	printf("Total number of elements: %u \n", hash_tab->nb_elements);
 	printf("****************************************************************\n");
+}
+
+
+void add_equipment(EquipmentsList* equipments_list, Equipment* equipment){
+  equipment->next = equipments_list->head;
+  equipments_list->head = equipment;
+}
+
+
+void load_house_config(EquipmentsList* equipments_list){
+  FILE* file;
+  file = fopen(EQUIPMENT_FILE, "r");
+  if (file != NULL){
+    unsigned int number;
+    char word[MAX_WORD_LENGHT];
+    while (fscanf(file, "%s %u", word, &number) > 0){
+      Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
+      equipment->number = number;
+      strcpy(equipment->word, word);
+      add_equipment(equipments_list, equipment);
+    }
+  }
+  else
+    printf("\nempty house_config.txt file\n");
+  fclose(file);
+}
+
+void disp_equipment(Equipment *equipment){
+  printf("%s, %u\n", equipment->word, equipment->number);
+}
+
+void disp_equipments_list(EquipmentsList* equipments_list){
+  Equipment *current = equipments_list->head;
+  printf("house's equipments are the following: (equipment, number)\n");
+  while ((current != NULL)){
+    disp_equipment(current);
+    current = current->next;
+  }
 }
