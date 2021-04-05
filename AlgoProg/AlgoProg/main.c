@@ -24,8 +24,6 @@ void tri_croissant(struct string * ABR);
 void tri_decroissant(struct string * ABR);
 struct string * supp_noeud(struct string *ABR, char * mot);
 void supp_abr(struct string* noeud);
-int main();
-
 
 /*affiche_chaine permet d'afficher un noeud de l'arbre. C'est a dire sa valeur : le mot et sa clef : la longueur du mot.*/
 void affiche_chaines(struct string * cell)

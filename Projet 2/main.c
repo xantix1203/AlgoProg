@@ -44,10 +44,12 @@ void insert_element_to_hash_table(hash_table* hash_tab, Element* element);
 unsigned long get_hash_value(char *string);
 void print_hash_table_characteristics(hash_table* hash_tab);
 
+Equipment* init_equipment(void);
 void add_equipment(EquipmentsList* equipments_list, Equipment* equipment);
 void load_house_config(EquipmentsList* equipments_list);
 void disp_equipment(Equipment *equipment);
 void disp_equipments_list(EquipmentsList* equipments_list);
+void save_house_config(EquipmentsList* equipments_list);
 
 
 int main(){
@@ -64,7 +66,7 @@ int main(){
 
 void menu(hash_table* hash_power, EquipmentsList* equipments_list){
   int choice;
-  printf("\n1/load house config\nchoice: ");
+  printf("\n1/load house \n2/add equipment\n3/show equipments\n4/save config\nchoice: ");
   scanf("%d", &choice);
   switch (choice){
     case 1 :
@@ -73,7 +75,18 @@ void menu(hash_table* hash_power, EquipmentsList* equipments_list){
       menu(hash_power, equipments_list);
       break;
     case 2 :
-    break;
+      add_equipment(equipments_list, init_equipment());
+      menu(hash_power, equipments_list);
+      break;
+    case 3 :
+      disp_equipments_list(equipments_list);
+      menu(hash_power, equipments_list);
+      break;
+    case 4 :
+      save_house_config(equipments_list);
+      break;
+    case 5 :
+      break;
   }
 }
 
@@ -141,6 +154,19 @@ void print_hash_table_characteristics(hash_table* hash_tab){
 }
 
 
+Equipment* init_equipment(){
+  char word[MAX_WORD_LENGHT];
+  printf("enter the equipment's name: ");
+  scanf("%s", word);
+  unsigned int number;
+  printf("Number of units in the house: ");
+  scanf("%u", &number);
+  Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
+  equipment->number = number;
+  strcpy(equipment->word, word);
+  return equipment;
+}
+
 void add_equipment(EquipmentsList* equipments_list, Equipment* equipment){
   equipment->next = equipments_list->head;
   equipments_list->head = equipment;
@@ -165,15 +191,27 @@ void load_house_config(EquipmentsList* equipments_list){
   fclose(file);
 }
 
+void save_house_config(EquipmentsList* equipments_list){
+  FILE* file;
+  file = fopen(EQUIPMENT_FILE, "w");
+  Equipment *current;
+  current = equipments_list->head;
+  while (current != NULL){
+    fprintf(file, "%s %u\n", current->word, current->number);
+    current = current->next;
+  }
+}
+
 void disp_equipment(Equipment *equipment){
-  printf("%s, %u\n", equipment->word, equipment->number);
+  printf("equipment: %s, number of units: %u\n", equipment->word, equipment->number);
 }
 
 void disp_equipments_list(EquipmentsList* equipments_list){
   Equipment *current = equipments_list->head;
-  printf("house's equipments are the following: (equipment, number)\n");
+  printf("****************** House's equipments **************************\n");
   while ((current != NULL)){
     disp_equipment(current);
     current = current->next;
   }
+  printf("****************************************************************\n");
 }
