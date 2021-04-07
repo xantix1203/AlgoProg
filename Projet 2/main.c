@@ -45,7 +45,10 @@ unsigned long get_hash_value(char *string);
 void print_hash_table_characteristics(hash_table* hash_tab);
 
 Equipment* init_equipment(void);
+void get_word(char* word);
 void add_equipment(EquipmentsList* equipments_list, Equipment* equipment);
+void supress_element(char* word, EquipmentsList *equipments_list);
+void supress_equipment(EquipmentsList *equipments_list);
 void load_house_config(EquipmentsList* equipments_list);
 void disp_equipment(Equipment *equipment);
 void disp_equipments_list(EquipmentsList* equipments_list);
@@ -66,26 +69,33 @@ int main(){
 
 void menu(hash_table* hash_power, EquipmentsList* equipments_list){
   int choice;
-  printf("\n1/load house \n2/add equipment\n3/show equipments\n4/save config\nchoice: ");
+  printf("\n***************************** menu *****************************\n");
+  printf("1/load house \n2/add equipment\n3/supress equipment\n4/show equipments\n5/save config\n");
+  printf("****************************************************************\nchoice: ");
   scanf("%d", &choice);
+  printf("\n\n");
   switch (choice){
     case 1 :
       load_house_config(equipments_list);
-      disp_equipments_list(equipments_list);
       menu(hash_power, equipments_list);
       break;
     case 2 :
       add_equipment(equipments_list, init_equipment());
+      printf(">>> Equipment was sucessfully added to the house");
       menu(hash_power, equipments_list);
       break;
     case 3 :
-      disp_equipments_list(equipments_list);
+      supress_equipment(equipments_list);
       menu(hash_power, equipments_list);
       break;
     case 4 :
-      save_house_config(equipments_list);
+      disp_equipments_list(equipments_list);
+      menu(hash_power, equipments_list);
       break;
     case 5 :
+      save_house_config(equipments_list);
+      break;
+    case 6 :
       break;
   }
 }
@@ -142,6 +152,7 @@ void load_hash_table(hash_table *hash_tab){
   fclose(file);
 }
 
+
 void print_hash_table_characteristics(hash_table* hash_tab){
 	/* A loadFactor = 0.75 offers a good tradeoff between time and space cost. */
 
@@ -156,20 +167,53 @@ void print_hash_table_characteristics(hash_table* hash_tab){
 
 Equipment* init_equipment(){
   char word[MAX_WORD_LENGHT];
-  printf("enter the equipment's name: ");
+  printf("Enter the equipment's name: ");
   scanf("%s", word);
   unsigned int number;
-  printf("Number of units in the house: ");
+  printf("\nNumber of units in the house: ");
   scanf("%u", &number);
+  printf("\n");
   Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
   equipment->number = number;
   strcpy(equipment->word, word);
   return equipment;
 }
 
+
 void add_equipment(EquipmentsList* equipments_list, Equipment* equipment){
   equipment->next = equipments_list->head;
   equipments_list->head = equipment;
+}
+
+
+void get_word(char* word){
+  printf("Enter the name of the equipment to supress: ");
+  scanf("%s", word);
+}
+
+
+void supress_element(char* word, EquipmentsList *equipments_list){
+  Equipment *current = equipments_list->head;
+  Equipment *prec = NULL;
+  while (current != NULL && strcmp(current->word, word) != 0){
+    prec = current;
+    current = current->next;
+  }
+  if (current == NULL)
+    printf(">>> wrong equipment's name\n");
+  else{
+    if (prec == NULL)
+      equipments_list->head = current->next;
+    else
+      prec->next = current->next;
+    printf(">>> %s was successfully removed from the house\n", word);
+  }
+}
+
+void supress_equipment(EquipmentsList *equipments_list){
+  char word[MAX_WORD_LENGHT];
+  get_word(word);
+  supress_element(word, equipments_list);
 }
 
 
@@ -185,9 +229,10 @@ void load_house_config(EquipmentsList* equipments_list){
       strcpy(equipment->word, word);
       add_equipment(equipments_list, equipment);
     }
+    printf(">>> house loaded\n");
   }
   else
-    printf("\nempty house_config.txt file\n");
+    printf(">>>empty house_config.txt file\n");
   fclose(file);
 }
 
@@ -200,6 +245,7 @@ void save_house_config(EquipmentsList* equipments_list){
     fprintf(file, "%s %u\n", current->word, current->number);
     current = current->next;
   }
+  printf(">>> house configuration saved in \"house_config.txt\"\n");
 }
 
 void disp_equipment(Equipment *equipment){
@@ -209,9 +255,13 @@ void disp_equipment(Equipment *equipment){
 void disp_equipments_list(EquipmentsList* equipments_list){
   Equipment *current = equipments_list->head;
   printf("****************** House's equipments **************************\n");
-  while ((current != NULL)){
-    disp_equipment(current);
-    current = current->next;
+  if (current == NULL)
+    printf("Empty configuration\n");
+  else{
+    while ((current != NULL)){
+      disp_equipment(current);
+      current = current->next;
+    }
   }
   printf("****************************************************************\n");
 }

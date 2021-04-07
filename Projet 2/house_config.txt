@@ -1,2 +1,2 @@
-chauffage 1
+chauffage 3
 four 2
