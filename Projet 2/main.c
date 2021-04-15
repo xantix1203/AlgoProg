@@ -38,11 +38,6 @@ typedef struct{
   Equipment *head;
 }HouseConfig;
 
-typedef struct{
-  Month *head
-}
-
-
 
 
 void menu(HashTable* hash_power, HouseConfig* house_config);
