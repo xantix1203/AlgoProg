@@ -1,2 +1,4 @@
-chauffage 3
+house_surface 200
+exploitable_surface 50
 four 2
+chauffage 3

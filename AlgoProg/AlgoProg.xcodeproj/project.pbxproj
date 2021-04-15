@@ -23,6 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		463DB26C2628710F00D053DC /* house_config.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = house_config.txt; path = "../../Projet 2/house_config.txt"; sourceTree = "<group>"; };
 		46F04E14256E764B00AA7C88 /* AlgoProg */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AlgoProg; sourceTree = BUILT_PRODUCTS_DIR; };
 		46F04E17256E764B00AA7C88 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,6 +58,7 @@
 		46F04E16256E764B00AA7C88 /* AlgoProg */ = {
 			isa = PBXGroup;
 			children = (
+				463DB26C2628710F00D053DC /* house_config.txt */,
 				46F04E17256E764B00AA7C88 /* main.c */,
 			);
 			path = AlgoProg;
@@ -88,7 +90,7 @@
 		46F04E0C256E764A00AA7C88 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1220;
+				LastUpgradeCheck = 1240;
 				TargetAttributes = {
 					46F04E13256E764B00AA7C88 = {
 						CreatedOnToolsVersion = 12.2;
@@ -239,6 +241,7 @@
 		46F04E1C256E764B00AA7C88 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y9BU6A6QB4;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -249,6 +252,7 @@
 		46F04E1D256E764B00AA7C88 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y9BU6A6QB4;
 				ENABLE_HARDENED_RUNTIME = YES;

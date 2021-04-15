@@ -1,0 +1,22 @@
+Latitude (decimal degrees):	43.455
+Longitude (decimal degrees):	5.471
+Radiation database:	PVGIS-SARAH
+Optimal slope angle (deg.):	37
+
+year		month		H(i_opt)_m
+2016		Jan		89.65
+2016		Feb		104.03
+2016		Mar		143.59
+2016		Apr		150.27
+2016		May		180.43
+2016		Jun		187.34
+2016		Jul		209.06
+2016		Aug		217.42
+2016		Sep		170.68
+2016		Oct		139.72
+2016		Nov		98.33
+2016		Dec		124.19
+
+H(i_opt)_m: Irradiation on optimally inclined plane (kWh/m2/mo)
+
+PVGIS (c) European Communities, 2001-2021
