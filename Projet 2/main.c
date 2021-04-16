@@ -29,6 +29,7 @@ typedef struct _hash_table{
 typedef struct _equipment{
   char word[MAX_WORD_LENGHT];
   unsigned int number;
+  unsigned int hours_per_week;
   struct _equipment *next;
 }Equipment;
 
@@ -91,8 +92,13 @@ void menu(HashTable* hash_power, HouseConfig* house_config){
     case 1 :
       menu_house_config(house_config);
       menu(hash_power, house_config);
+      break;
     case 2 :
       compute(hash_power, house_config);
+      menu(hash_power, house_config);
+      break;
+    case 3 :
+      break;
   }
 }
 
@@ -207,10 +213,14 @@ Equipment* init_equipment(){
   unsigned int number;
   printf("\nNumber of units in the house: ");
   scanf("%u", &number);
+  unsigned int hours_per_week;
+  printf("\nNumber of hours of use per week: ");
+  scanf("%u", &hours_per_week);
   printf("\n");
   Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
   equipment->number = number;
   strcpy(equipment->word, word);
+  equipment->hours_per_week = hours_per_week;
   return equipment;
 }
 
@@ -258,7 +268,8 @@ void load_house_config(HouseConfig* house_config){
   if (file != NULL){
     unsigned int number;
     char word[MAX_WORD_LENGHT];
-    while (fscanf(file, "%s %u", word, &number) > 0){
+    unsigned int hours_per_week;
+    while (fscanf(file, "%s %u %u", word, &number, &hours_per_week) > 0){
       if (strcmp(word, "house_surface") == 0)
         house_config->house_surface = number;
       else if (strcmp(word, "exploitable_surface") == 0)
@@ -267,6 +278,7 @@ void load_house_config(HouseConfig* house_config){
         Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
         equipment->number = number;
         strcpy(equipment->word, word);
+        equipment->hours_per_week = hours_per_week;
         add_equipment(house_config, equipment);
       }
     }
@@ -285,20 +297,20 @@ void save_house_config(HouseConfig* house_config){
   Equipment *current;
   current = house_config->head;
   while (current != NULL){
-    fprintf(file, "%s %u\n", current->word, current->number);
+    fprintf(file, "%s %u %u\n", current->word, current->number, current->hours_per_week);
     current = current->next;
   }
   printf(">>> house configuration saved in \"house_config.txt\"\n");
 }
 
 void disp_equipment(Equipment *equipment){
-  printf("equipment: %s, number of units: %u\n", equipment->word, equipment->number);
+  printf("equipment: %s, number of units: %u, hours of use per week: %u\n", equipment->word, equipment->number, equipment->hours_per_week);
 }
 
 void disp_house_config(HouseConfig* house_config){
   Equipment *current = house_config->head;
   printf("****************** House's configuration **************************\n");
-  printf("House surface: %u\n", house_config->house_surface);
+  printf("House's surface: %u\n", house_config->house_surface);
   printf("House's exploitable surface: %u\n", house_config->exploitable_surface);
   printf(">>> Equipments:\n");
   if (current == NULL)
@@ -318,7 +330,7 @@ void disp_house_config(HouseConfig* house_config){
 void compute(HashTable* hash_power, HouseConfig* house_config){
   Result* result = (Result*) malloc(sizeof(Result));
   result->mean_consumption = calc_mean_consumption(hash_power, house_config);
-  printf("%u\n", result->mean_consumption);
+  printf("mean consumption: %u\n", result->mean_consumption);
   FILE* file;
   file = fopen("Data/data.txt", "r");
   if (file != NULL){
@@ -328,6 +340,7 @@ void compute(HashTable* hash_power, HouseConfig* house_config){
     unsigned int peak_power;
     fscanf(file, "%s %u", type, &peak_power);
   }
+  fclose(file);
 }
 
 
@@ -338,7 +351,7 @@ unsigned int calc_mean_consumption(HashTable* hash_power, HouseConfig* house_con
   int power;
   while (current != NULL){
     power = hash_power->Elements[get_hash_value(current->word)]->power;
-    intermediate = power*(current->number);
+    intermediate = power*(current->number)*(current->hours_per_week)*52;
     if (strcmp(current->word, "chauffage") == 0)
       result += (intermediate)*(house_config->house_surface);
     else
