@@ -6,7 +6,7 @@
 
 #define POWER_FILE "Data/power.csv"
 #define EQUIPMENT_FILE "house_config.txt"
-#define MONTHLY_DATA "Projet 2/Data/Monthlydata_43.455_5.471_SA_2016_2016.csv"
+#define MONTHLY_DATA "Data/Monthlydata_43.455_5.471_SA_2016_2016.csv"
 #define MAX_WORD_LENGHT	28		/* Maximum word length */
 #define HASH_SIZE 7	/* Prime number */
 #define BASE 128
@@ -283,10 +283,10 @@ void load_house_config(HouseConfig* house_config){
       }
     }
     printf(">>> house loaded\n");
+    fclose(file);
   }
   else
     printf(">>> empty house_config.txt file\n");
-  fclose(file);
 }
 
 void save_house_config(HouseConfig* house_config){
@@ -300,6 +300,7 @@ void save_house_config(HouseConfig* house_config){
     fprintf(file, "%s %u %u\n", current->word, current->number, current->hours_per_week);
     current = current->next;
   }
+  fclose(file);
   printf(">>> house configuration saved in \"house_config.txt\"\n");
 }
 
