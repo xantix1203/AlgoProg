@@ -10,7 +10,7 @@
 #define MAX_WORD_LENGHT	28		/* Maximum word length */
 #define HASH_SIZE 7	/* Prime number */
 #define BASE 128
-
+#define SAUVEGARDE "save.txt"
 
 
 typedef struct _element{
@@ -67,6 +67,10 @@ void save_house_config(HouseConfig* HouseConfig);
 
 void compute(HashTable* hash_power, HouseConfig* house_config);
 unsigned int calc_mean_consumption(HashTable* hash_power, HouseConfig* house_config);
+float calc_kWc(int N);
+unsigned int surface_necessary(unsigned int consumption_house);
+void save_result(unsigned int consumption, float price_consumption, int surface, unsigned int exploitable_surface, int N, unsigned int price, float production_solar_panel, float money_save, int time_refund);
+void change_data(int price, float price2);
 
 
 
@@ -76,6 +80,7 @@ int main(){
   load_hash_table(&hash_power);
   print_hash_table_characteristics(&hash_power);
   HouseConfig house_config;
+	house_config.head=NULL;
   menu(&hash_power, &house_config);
 	return 0;
 }
@@ -84,10 +89,12 @@ int main(){
 void menu(HashTable* hash_power, HouseConfig* house_config){
   int choice;
   printf("\n***************************** Menu *****************************\n");
-  printf("1/configure house\n2/compute\n");
+  printf("1/configure house\n2/compute\n3/changer les prix\n");
   printf("****************************************************************\nchoice: ");
   scanf("%d", &choice);
   printf("\n\n");
+  int price;
+  float price2;
   switch (choice){
     case 1 :
       menu_house_config(house_config);
@@ -98,6 +105,11 @@ void menu(HashTable* hash_power, HouseConfig* house_config){
       menu(hash_power, house_config);
       break;
     case 3 :
+      printf("donner le prix d'un panneaux solaire");
+      scanf("%d",&price);
+      printf("donner le prix du kWh");
+      scanf("%f",&price2);
+      change_data(price, price2);
       break;
   }
 }
@@ -269,18 +281,14 @@ void load_house_config(HouseConfig* house_config){
     unsigned int number;
     char word[MAX_WORD_LENGHT];
     unsigned int hours_per_week;
-    while (fscanf(file, "%s %u %u", word, &number, &hours_per_week) > 0){
-      if (strcmp(word, "house_surface") == 0)
-        house_config->house_surface = number;
-      else if (strcmp(word, "exploitable_surface") == 0)
-        house_config->exploitable_surface = number;
-      else{
+    fscanf(file,"%s %u",word, &house_config->house_surface);
+    fscanf(file,"%s %u",word, &house_config->exploitable_surface);
+    while (fscanf(file, "%s %u %u", word, &number, &hours_per_week) == 3){
         Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
         equipment->number = number;
         strcpy(equipment->word, word);
         equipment->hours_per_week = hours_per_week;
         add_equipment(house_config, equipment);
-      }
     }
     printf(">>> house loaded\n");
     fclose(file);
@@ -329,19 +337,35 @@ void disp_house_config(HouseConfig* house_config){
 
 
 void compute(HashTable* hash_power, HouseConfig* house_config){
-  Result* result = (Result*) malloc(sizeof(Result));
-  result->mean_consumption = calc_mean_consumption(hash_power, house_config);
-  printf("mean consumption: %u\n", result->mean_consumption);
+  unsigned int mean_consumption = calc_mean_consumption(hash_power, house_config);
+  printf("mean consumption: %u\n", mean_consumption);
   FILE* file;
   file = fopen("Data/data.txt", "r");
+  unsigned int solar_panel_cost;
+  float price_kwh;
   if (file != NULL){
     char type[MAX_WORD_LENGHT];
-    unsigned int solar_panel_cost;
     fscanf(file, "%s %u", type, &solar_panel_cost);
-    unsigned int peak_power;
-    fscanf(file, "%s %u", type, &peak_power);
+    fscanf(file,"%s %f", type, &price_kwh);
   }
   fclose(file);
+  float price_consumption=(mean_consumption)*price_kwh;
+  printf("la consommation en électricité de la maison coute %f euros par ans\n", price_consumption);
+  unsigned int surface=surface_necessary(mean_consumption);
+  printf("pour compenser sa consommation d'electricite il faut utiliser une surface de %u m² pour compenser sa consommation\n",surface);
+  printf("combien de m² voulez vous utiliser pour l'installation de panneaux solaire \n");
+  scanf("%u",&(house_config->exploitable_surface));
+  int N=(house_config->exploitable_surface)/1.7; /*la dimension d'1 panneau solaire est prise a 1.7 m²*/
+  printf("On peut installer %d panneaux solaire au maximum sur cette surface\n",N);
+  unsigned int price=N*solar_panel_cost;
+  printf("installer ces %d panneaux solaire coute %u euros\n",N,price);
+  float production_solar_panel=calc_kWc(N);
+  printf("si les panneaux solaires sont optimisés ils produiront %f kW par an\n",production_solar_panel);
+  float money_save=production_solar_panel*price_kwh;
+  printf("soit une economie de %f euros par an\n",money_save);
+  int time_refund=(price/money_save)+1;
+  printf("l'installation sera rembourse au cours de la %d année\n",time_refund);
+  save_result(mean_consumption, price_consumption, surface, house_config->exploitable_surface, N, price, production_solar_panel, money_save, time_refund);
 }
 
 
@@ -361,3 +385,93 @@ unsigned int calc_mean_consumption(HashTable* hash_power, HouseConfig* house_con
   }
   return result;
 }
+
+
+unsigned int surface_necessary(unsigned int consumption_house){
+	 FILE* file;
+ 	 file=fopen(MONTHLY_DATA,"r");
+ 	 if(file!=NULL){
+  		char type[MAX_WORD_LENGHT];
+  		char type2[MAX_WORD_LENGHT];
+  		char type3[MAX_WORD_LENGHT];
+  		char type4[MAX_WORD_LENGHT];
+  		float passer;
+  		fscanf(file,"%s %s %s %f",type, type2, type3, &passer);
+  		fscanf(file,"%s %s %s %f",type, type2, type3, &passer);
+  		fscanf(file,"%s %s %s",type, type2, type3);
+  		fscanf(file,"%s %s %s  %s %f",type, type2, type3,type4, &passer);
+  		fscanf(file,"%s %s %s ",type, type2, type3);
+  		float kwc=0.0;
+  		float production_month;
+  		int year;
+  		char month[MAX_WORD_LENGHT];
+  		for(int i=0;i<12;i++){
+  			fscanf(file,"%d %s %f",&year, month , &production_month);
+  			kwc=kwc+production_month;
+  		}
+  		fclose(file);
+  		unsigned int surface_necessary=consumption_house/kwc;
+  		return surface_necessary;
+  }
+  else{
+  	fclose(file);
+  	return 0;
+  }
+}
+
+
+float calc_kWc(int N)
+{
+  FILE* file;
+  file=fopen(MONTHLY_DATA,"r");
+  if(file!=NULL){
+  	char type[MAX_WORD_LENGHT];
+  	char type2[MAX_WORD_LENGHT];
+  	char type3[MAX_WORD_LENGHT];
+  	char type4[MAX_WORD_LENGHT];
+  	float passer;
+  	fscanf(file,"%s %s %s %f",type, type2, type3, &passer);
+  	fscanf(file,"%s %s %s %f",type, type2, type3, &passer);
+  	fscanf(file,"%s %s %s",type, type2, type3);
+  	fscanf(file,"%s %s %s  %s %f",type, type2, type3,type4, &passer);
+  	fscanf(file,"%s %s %s ",type, type2, type3);
+  	float kwc=0.0;
+  	float production_month;
+  	int year;
+  	char month[MAX_WORD_LENGHT];
+  	for(int i=0;i<12;i++){
+  		fscanf(file,"%d %s %f",&year, month , &production_month);
+  		kwc=kwc+production_month;
+  		}
+  	fclose(file);
+  	return kwc*N*1.7;
+  }
+  else{
+  	fclose(file);
+  	return 0.0;
+  }
+}
+
+
+void change_data(int price, float price2){
+	FILE* file;
+  	file = fopen("Data/data.txt", "w");
+  	fprintf(file,"solar_panel_cost_per_kWc %d  \n",price);
+  	fprintf(file,"price_kWh %f  ", price2);
+  	printf("les prix ont bien été changés");
+ }
+
+
+void save_result(unsigned int consumption, float price_consumption, int surface, unsigned int exploitable_surface, int N, unsigned int price, float production_solar_panel, float money_save, int time_refund){
+ 	FILE* file;
+ 	file=fopen(SAUVEGARDE,"w");
+ 	fprintf(file,"la consomation de la maison est %u kW par ans\n",consumption);
+ 	fprintf(file,"cela vous coutes %f\n",price_consumption);
+ 	fprintf(file,"pour compenser cette consommation on a besoin de %u m² pour installer des panneaux solaire\n",surface);
+ 	fprintf(file,"vous avez decider d'utiliser %u metres carré pour votre installation",exploitable_surface);
+ 	fprintf(file,"vous pouvez donc installer %d panneaux solairepour %u euros\n",N, price);
+ 	fprintf(file,"ces panneaux solaires vont produire %f kW par an\n",production_solar_panel);
+ 	fprintf(file,"cela va vous faire economiser %f euros par an",money_save);
+ 	fprintf(file,"il vous faudra donc %d années pour etre rembourser",time_refund);
+ 	fclose(file);
+ }

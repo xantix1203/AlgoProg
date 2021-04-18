@@ -1,0 +1,6 @@
+la consomation de la maison est 104156 kW par ans
+cela vous coutes 18748.080078
+pour compenser cette consommation on a besoin de 57 m² pour installer des panneaux solaire
+vous avez decider d'utiliser 50 metres carré pour votre installationvous pouvez donc installer 29 panneaux solairepour 69600 euros
+ces panneaux solaires vont produire 89465.203125 kW par an
+cela va vous faire economiser 16103.737305 euros par anil vous faudra donc 5 années pour etre rembourser

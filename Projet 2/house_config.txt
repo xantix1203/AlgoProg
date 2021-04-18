@@ -1,4 +1,4 @@
 house_surface 200
 exploitable_surface 50
 four 1 1
-chauffage 10 10
+chauffage 5 4
