@@ -1,2 +1,2 @@
-solar_panel_cost_per_kWc 2400
+solar_panel_cost 2400  
 price_kWh 0.180000
