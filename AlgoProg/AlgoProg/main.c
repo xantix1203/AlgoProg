@@ -1,344 +1,281 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define STR_MAX 100
+#include <math.h>
 
-struct string
-{
-    struct string * fd;
-    struct string * fg;
-    char str[STR_MAX];
-    int len;
-};
+#define POWER_FILE "power.csv"
+#define EQUIPMENT_FILE "house_config.txt"
+#define MAX_WORD_LENGHT    28        /* Maximum word length */
+#define HASH_SIZE 7    /* Prime number */
+#define BASE 128
 
 
 
-void affiche_chaines(struct string * cell);
-struct string * lit_fichier(char *nom_fichier, struct string * ABR, int * nb);
-void affiche_arbre(struct string * ABR);
-struct string * nouveau_noeud(char mot[]);
-struct string * insere_nd(struct string *ABR, struct string *noeud);
-void chercher_mot (struct string *ABR, char mot[]);
-void chercher_mot_long (struct string *ABR, int l);
-void tri_croissant(struct string * ABR);
-void tri_decroissant(struct string * ABR);
-struct string * supp_noeud(struct string *ABR, char * mot);
-void supp_abr(struct string* noeud);
+typedef struct _element{
+  char word[MAX_WORD_LENGHT];
+  unsigned int power;
+  struct _element *next;
+}Element;
 
-/*affiche_chaine permet d'afficher un noeud de l'arbre. C'est a dire sa valeur : le mot et sa clef : la longueur du mot.*/
-void affiche_chaines(struct string * cell)
-{
-    if (cell != NULL)
-    {
-        printf("%s",(cell->str));
-        printf(" (%d)\n",cell->len);
-    }
+typedef struct _hash_table{
+  unsigned int size;
+  unsigned int nb_occupied_entries;
+  unsigned int nb_elements;
+  Element** Elements;
+}HashTable;
+
+typedef struct _equipment{
+  char word[MAX_WORD_LENGHT];
+  unsigned int number;
+  struct _equipment *next;
+}Equipment;
+
+typedef struct{
+  Equipment *head;
+}EquipmentsList;
+
+typedef struct{
+  unsigned int house_surface;
+  unsigned int exploitable_surface;
+  EquipmentsList *equipments_list;
+}HouseConfig;
+
+
+void menu(HashTable* hash_power, HouseConfig* house_config);
+
+void initialize_hash_table(HashTable* hash_tab);
+void load_hash_table(HashTable* hash_tab);
+void insert_element_to_hash_table(HashTable* hash_tab, Element* element);
+unsigned long get_hash_value(char *string);
+void print_hash_table_characteristics(HashTable* hash_tab);
+
+Equipment* init_equipment(void);
+void get_word(char* word);
+void add_equipment(EquipmentsList* equipments_list, Equipment* equipment);
+void supress_element(char* word, EquipmentsList *equipments_list);
+void supress_equipment(EquipmentsList *equipments_list);
+void load_house_config(HouseConfig* house_config);
+void disp_equipment(Equipment *equipment);
+void disp_house_config(HouseConfig* house_config);
+void save_house_config(EquipmentsList* equipments_list);
+
+
+int main(){
+    HashTable hash_power;
+    initialize_hash_table(&hash_power);
+  load_hash_table(&hash_power);
+  print_hash_table_characteristics(&hash_power);
+  HouseConfig house_config;
+  menu(&hash_power, &house_config);
+    return 0;
 }
 
-/*Affiche_arbre permet de lire le fichier grâce à un parcours préfixe : racine/gauche/droite. On effectue ce parcours de manière récursive.*/
-void affiche_arbre(struct string * ABR)
-{
-    if(ABR != NULL)
-    {
-        affiche_chaines(ABR);
-        if (ABR->fg != NULL)
-        {
-            affiche_arbre(ABR->fg);
-        }
-        if(ABR->fd!= NULL)
-        {
-            affiche_arbre(ABR->fd);
-        }
-    }
+
+void menu(HashTable* hash_power, HouseConfig* house_config){
+  int choice;
+  printf("\n***************************** menu *****************************\n");
+  printf("1/load house \n2/add equipment\n3/supress equipment\n4/show equipments\n5/save config\n");
+  printf("****************************************************************\nchoice: ");
+  scanf("%d", &choice);
+  printf("\n\n");
+  switch (choice){
+    case 1 :
+      load_house_config(house_config);
+      menu(hash_power, house_config);
+      break;
+    case 2 :
+      add_equipment(house_config->equipments_list, init_equipment());
+      printf(">>> Equipment was sucessfully added to the house");
+      menu(hash_power, house_config);
+      break;
+    case 3 :
+      supress_equipment(house_config->equipments_list);
+      menu(hash_power, house_config);
+      break;
+    case 4 :
+      disp_house_config(house_config);
+      menu(hash_power, house_config);
+      break;
+    case 5 :
+      save_house_config(house_config->equipments_list);
+      break;
+    case 6 :
+      break;
+  }
 }
 
-/*lit_ficher permet de lire un ficher et de convertir chaque mot du fichier en une cellule de l'arbre.
-Le noeud est créée en utilisant la fonction nouveau_noeud qui affecte comme clé la longueur du mot et comme la valeur du noeud le mot. Il est ensuite placé dans l'arbre grâce insère_noeud défni après.*/
-struct string * lit_fichier(char *nom_fichier, struct string * ABR, int * nbredemots)
-{
-    FILE *f;
-    struct string * noeud ;
-    char mot[STR_MAX] ;
-    int nbmot = 0;
-    int i = 0;
-    int a = 0;
 
-    f = fopen(nom_fichier, "r") ; /*on ouvre le fichier texte que l'on va lire.*/
-    if (f==NULL)
-        printf("Fichier non disponible.\n");
+unsigned long get_hash_value(char *string){
+    unsigned long    hash_value = 0;
+    int    i = 0;
+    while ((*string) != '\0')
+    {
+        hash_value += hash_value % HASH_SIZE + ((*string) * (int) pow (BASE, i) )% HASH_SIZE;
+        i++;
+        string++;
+    }
+    return hash_value % HASH_SIZE;
+}
+
+
+void insert_element_to_hash_table(HashTable* hash_tab, Element* element){
+    hash_tab->nb_elements++;
+    unsigned long    i        = get_hash_value(element->word);
+    if (hash_tab->Elements[i] == NULL)
+        hash_tab->nb_occupied_entries++;
+    element->next = hash_tab->Elements[i];
+    hash_tab->Elements[i]    = element;
+}
+
+
+void initialize_hash_table(HashTable *hash_tab){
+    hash_tab->size    = HASH_SIZE;
+    hash_tab->nb_occupied_entries = 0;
+    hash_tab->nb_elements = 0;
+    hash_tab->Elements = (Element **) malloc(hash_tab->size * sizeof(Element*));
+    for (unsigned int i = 0; i < hash_tab->size; i++)
+        hash_tab->Elements[i] = NULL;
+}
+
+
+void load_hash_table(HashTable *hash_tab){
+  FILE* file;
+  file = fopen(POWER_FILE, "r");
+  if (file!=NULL){
+    unsigned int power;
+    char word[MAX_WORD_LENGHT];
+    while (fscanf(file, "%s %u", word, &power) > 0){
+      Element* element    = (Element *) malloc(sizeof(Element));
+      strcpy(element->word, word);
+      element->power = power;
+      insert_element_to_hash_table(hash_tab, element);
+    }
+  }
+  else
+    printf("\nNo power.txt file\n");
+  fclose(file);
+}
+
+
+void print_hash_table_characteristics(HashTable* hash_tab){
+    /* A loadFactor = 0.75 offers a good tradeoff between time and space cost. */
+
+    float loadFactor =  1.0*hash_tab->nb_occupied_entries/hash_tab->size;
+    printf("************** Hash Table Characteristics **********************\n");
+    printf("Number of buckets: %u \n", hash_tab->size);
+    printf("Load Factor: %.2f \n", loadFactor);
+    printf("Total number of elements: %u \n", hash_tab->nb_elements);
+    printf("****************************************************************\n");
+}
+
+
+Equipment* init_equipment(){
+  char word[MAX_WORD_LENGHT];
+  printf("Enter the equipment's name: ");
+  scanf("%s", word);
+  unsigned int number;
+  printf("\nNumber of units in the house: ");
+  scanf("%u", &number);
+  printf("\n");
+  Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
+  equipment->number = number;
+  strcpy(equipment->word, word);
+  return equipment;
+}
+
+
+void add_equipment(EquipmentsList* equipments_list, Equipment* equipment){
+  equipment->next = equipments_list->head;
+  equipments_list->head = equipment;
+}
+
+
+void get_word(char* word){
+  printf("Enter the name of the equipment to supress: ");
+  scanf("%s", word);
+}
+
+
+void supress_element(char* word, EquipmentsList *equipments_list){
+  Equipment *current = equipments_list->head;
+  Equipment *prec = NULL;
+  while (current != NULL && strcmp(current->word, word) != 0){
+    prec = current;
+    current = current->next;
+  }
+  if (current == NULL)
+    printf(">>> wrong equipment's name\n");
+  else{
+    if (prec == NULL)
+      equipments_list->head = current->next;
     else
-    {
-        while ( fscanf(f, "%s", mot) > 0 ) {
-            noeud = nouveau_noeud(mot) ;
-            ABR = insere_nd(ABR, noeud) ;
-            ++ *nbredemots ;
-            ++ a ;
-        }
+      prec->next = current->next;
+    printf(">>> %s was successfully removed from the house\n", word);
+  }
+}
+
+void supress_equipment(EquipmentsList *equipments_list){
+  char word[MAX_WORD_LENGHT];
+  get_word(word);
+  supress_element(word, equipments_list);
+}
+
+
+void load_house_config(HouseConfig* house_config){
+  FILE* file;
+  file = fopen(EQUIPMENT_FILE, "r");
+  if (file != NULL){
+    unsigned int number;
+    char word[MAX_WORD_LENGHT];
+    while (fscanf(file, "%s %u", word, &number) > 0){
+      if (strcmp(word, "house_surface") == 0)
+        house_config->house_surface = number;
+      else if (strcmp(word, "exploitable_surface") == 0)
+        house_config->exploitable_surface = number;
+      else{
+        Equipment *equipment = (Equipment *) malloc(sizeof(Equipment));
+        equipment->number = number;
+        strcpy(equipment->word, word);
+        add_equipment(house_config->equipments_list, equipment);
+      }
     }
-
-    printf("%d",a);
-    *nbredemots = nbmot ;
-    fseek(f, 0, SEEK_SET);
-    while ((fscanf(f,"%s",mot)!=EOF)) /*permet de lire le fichier et d'insérer le mot dans l'arbre.*/
-        {
-            noeud = nouveau_noeud(mot);
-            insere_nd(ABR,noeud);
-            i ++ ;
-        }
-
-    fclose(f);
-    return ABR;
+    printf(">>> house loaded\n");
+  }
+  else
+    printf(">>> empty house_config.txt file\n");
+  fclose(file);
 }
 
-
-/*La fonction nouveau_noeud permet de créer un noeud à partir d'un mot et en initialisant le fis gauche et le fils droit à la valeur NULL. */
-struct string * nouveau_noeud(char mot[])
-{
-    struct string * nv_nd = NULL;
-    nv_nd = malloc(sizeof(struct string)) ; /*permet d'allouer la mémoire nécessaire pour enregistrer le noeud*/
-    strcpy(nv_nd->str, mot) ;
-    nv_nd -> len = strlen(mot);
-    nv_nd -> fg = NULL;
-    nv_nd -> fd = NULL;
-    return nv_nd;
+void save_house_config(EquipmentsList* equipments_list){
+  FILE* file;
+  file = fopen(EQUIPMENT_FILE, "w");
+  Equipment *current;
+  current = equipments_list->head;
+  while (current != NULL){
+    fprintf(file, "%s %u\n", current->word, current->number);
+    current = current->next;
+  }
+  printf(">>> house configuration saved in \"house_config.txt\"\n");
 }
 
-/*La fonction insere_noeud permet d'insérer un noeur créer en respectant les règles qui régissent un arbre.
-Le fils le plus à gauche est plus petit que sa racine et le fils à droite est plus grand que sa racine.
-Ainsi la valeur de la racine doit être comprise entre la valeur du fils gauche et du fils droit.*/
-struct string * insere_nd(struct string *ABR, struct string *noeud)
-{
-    if (ABR != NULL)
-    {
-        if (ABR->len > noeud->len) /*on écrit ABR->len et non ABR.len car ABR est un pointeur et non une structure complexe.*/
-        {
-            if (ABR->fg!=NULL)
-                insere_nd(ABR->fg,noeud);
-            else
-                {ABR->fg = noeud;}
-        }
-        if (noeud -> len > ABR->len)
-        {
-            if (ABR->fd!=NULL)
-                insere_nd(ABR->fd,noeud);
-            else
-                {ABR->fd = noeud;}
-        }
+void disp_equipment(Equipment *equipment){
+  printf("equipment: %s, number of units: %u\n", equipment->word, equipment->number);
+}
+
+void disp_house_config(HouseConfig* house_config){
+  Equipment *current = house_config->equipments_list->head;
+  printf("****************** House's configuration **************************\n");
+  printf("House surface: %u\n", house_config->house_surface);
+  printf("House's exploitable surface: %u\n", house_config->exploitable_surface);
+  printf(">>> Equipments:\n");
+  if (current == NULL)
+    printf("No equipment to show\n");
+  else{
+    while ((current != NULL)){
+      disp_equipment(current);
+      current = current->next;
     }
-    return ABR ;
+  }
+  printf("****************************************************************\n");
 }
-
-
-/*La fonction recherche permet de rechercher les mots d'une longeur donné dans un arbre à partir de leur clef.*/
-
-void chercher_mot_long(struct string *ABR, int l){
-    if (ABR->str != NULL){
-        if (ABR->len > l ){
-            chercher_mot_long(ABR->fd, l) ;
-        }
-        if (ABR->len < l ){
-            chercher_mot_long(ABR->fg, l) ;
-        }
-        if (ABR->len == l ){
-            printf("%s\n",ABR->str) ;
-            printf("\n");
-            chercher_mot_long(ABR->fg, l) ;
-            chercher_mot_long(ABR->fd, l) ;
-        }
-    }
-}
-
-void chercher_mot(struct string *ABR, char mot[]){
-    int l = strlen(mot);
-
-    if (ABR->str != NULL){
-        if (ABR->len > l ){
-            chercher_mot(ABR->fd, mot) ;
-        }
-        if (ABR->len < l ){
-            chercher_mot(ABR->fg, mot) ;
-        }
-        if (ABR->len == l ){
-            if(strcmp(ABR->str, mot)==0) {
-                printf("%s\n","Le mot se trouve bien dans le document. \n");
-                exit(1);
-            }
-            else{
-                chercher_mot(ABR->fd, mot) ;
-            }
-        }
-    }
-    printf("Le mot ne se trouve malheureusement pas dans le document. \n");
-    exit(1);
-}
-
-/*Les fonctions tri croissant et tri_decroissant permet d'avoir les mots contenus dans un arbre en les ayant trié par ordre
-croissant ou décroissant de leur longueur.
-En effet, dans un arbre binaire le fils gauche est plus petit que la racine et le fils droit et plus grand que la racine
-qui elle même plus petite que sa racine si elle est un fils gauche ou plus grande que sa racine si elle est le fils droit.
-Et ainsi de suite.*/
-void tri_croissant(struct string * ABR)
-{
-    if (ABR == NULL)
-        return ;
-    tri_croissant(ABR->fg);
-    printf(ABR->str);
-    tri_croissant(ABR->fd);
-}
-
-void tri_decroissant(struct string * ABR)
-{
-    if (ABR == NULL)
-        return ;
-    tri_decroissant(ABR->fd);
-    printf(ABR->str);
-    tri_decroissant(ABR->fg);
-}
-
-/*La fonction supp_noeud permet de supprimer un mot de l'arbre grâce à sa longueur.
-Cette fonction supprime un noeud tout en gardants la structure de l'arbre.*/
-struct string * supp_nd(struct string *ABR, char * mot)
-{
-    int n = strlen(mot);
-    struct string* temp;
-    struct string* boom;
-
-    if (ABR == NULL)
-        return ABR;
-
-    if (n < ABR->len)
-        ABR->fg = supp_nd(ABR->fg, mot); /* Si le mot a supprime est plus petit que le mot de la racine alors il faut aller à gauche */
-
-        else if (n > ABR->len)
-        ABR->fg = supp_nd(ABR->fd, mot); /* Si le mot a supprime est plus grand que le mot de la racine alors il faut aller à droite */
-    /*sinon les deux mots ont la même longeur.*/
-            else
-            {
-                if (ABR->fg == NULL)
-                {
-                    struct string * temp = ABR->fd;
-                    free(ABR);
-                    return temp;
-                }
-                else if (ABR->fd == NULL)
-                {
-                    struct string *temp = ABR->fg;
-                    free(ABR);
-                    return temp;
-                }
-                boom = ABR->fd;
-                while (boom && boom->fg != NULL)
-                    boom = boom->fd;
-
-                temp = boom;
-                ABR->len = temp->len;
-                ABR->fd = supp_nd(ABR->fd, temp->str);
-            }
-            return ABR;
-        }
-
-        void supp_abr(struct string* noeud)
-        {
-            if (noeud == NULL)
-                return;
-
-            supp_abr(noeud->fg);
-            supp_abr(noeud->fd);
-    free(noeud); /*On supprime la mémoire allouée au noeud qui était dans ABR*/
-        }
-
-        int menu()
-        {
-           int choix = 0;
-           printf("Que voulez vous faire ? \n");
-           printf("1. Afficher la liste\n");
-           printf("2. Rechercher un mot\n");
-           printf("3. Trier la liste\n");
-           printf("4. Supprimer un mot\n");
-           printf("5. Quitter\n");
-           scanf("%d",&choix);
-           return choix;
-       }
-/*La fonction main permet de créer une interface entre la machine et l'utilisateur.*/
-int main(int argc,char* argv[]){
-    int nbdredemots = 0 ;
-    int l ;
-    struct string * ABR ;
-    ABR = NULL ;
-
-    printf("================================================================================\n");
-    printf("Veuillez écrire la requête suivante dans le bash : \n-Si vous souhaitez savoir si le mot 'toto' est dans le document :'./main strings.txt recherche_mot toto' \n-Si vous avoir la liste de tous les mots contenant 'k' lettres dans le document : './main strings.txt recherche_lettre k'\n'-Si vous souhaitez afficher la liste des mots présnets dans le document par ordre (dé)croissant de lettre : './main strings.txt tri (de)croissant'\n");
-    printf("================================================================================\n");
-    
-    
-
-    if (argc == 1) {
-        fprintf(stderr, "Il me faudrait un nom de fichier ...\n") ;
-        return 1 ;
-    }
-    
-    else {
-        ABR = lit_fichier(argv[1], ABR, &nbdredemots) ;
-        
-        if (strcmp(argv[2], "recherche_lettre") == 0 ) {
-            if (argc < 4) {
-                fprintf(stderr, "Il manque le nombre de lettres...\n") ;
-                return 0 ;
-            }
-            
-            else {
-                sscanf(argv[3], "%d", &l) ;
-                chercher_mot_long(ABR, l) ;
-            }
-        }
-
-        else if (strcmp(argv[2], "recherche_mot") == 0 ) {
-            if (argc < 4) {
-                fprintf(stderr, "Il manque le mot à rechercher...\n") ;
-                return 0 ;
-            }
-            
-            else {
-                chercher_mot(ABR, argv[3]) ;
-            }
-        }
-        
-        else if (strcmp(argv[2], "tri") == 0) {
-            
-            if (argc < 4) {
-                fprintf(stderr, "Il manque le type de tri...\n") ;
-                return 0 ;
-            }
-            
-            else {
-            
-                if (strcmp(argv[3], "croissant")) {
-                    tri_croissant(ABR) ;
-                }
-            
-                else if (strcmp(argv[3], "decroissant")) {
-                    tri_decroissant(ABR) ;
-                }
-            }
-        }
-         
-    return 0 ;
-    }
-}
-
-
-/*Exercice 7
-4°
-Une des lois implicite de la programmation est que "a fonction achieves only one task".
-Et donc en séparant les deux fonctions on est plus clair, concis et élégant.
-En fusionnant les deux fonctions cela nous permet d'être plus rapide mais on perd en clarté et nous n'obéissons plus à la loi implicite.
-
-Exercice 8
-2°
-Nous devons utiliser la longueur du mot.
-Si le mot a une longueur plus grande que la racine il sera situé à droite de celle-ci, à gauche sinon.
-On prend alors le sous arbre qui a comme racine le fils gauche ou droit de la racine.
-On réitère ce procédé jusqu'à trouver les mots qui ont la même longueur que le mot recherché.
-La compléxité en temps d'un tel algorithme est en O(log2(n)) ou n est le nombre de noeuds.
-*/
 
